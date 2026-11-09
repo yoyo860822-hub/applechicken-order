@@ -53,6 +53,38 @@
   }
   .btn-ghost.active { background: var(--cream); color: var(--red); border-color: var(--cream); }
 
+  .mode-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 10px 8px;
+    position: sticky; top: 62px; z-index: 35;
+    box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  }
+  .mode-label {
+    font-size: 13px; color: var(--gray); font-weight: 600;
+    margin-bottom: 6px; padding-left: 4px;
+  }
+  .mode-switch {
+    display: flex; gap: 6px;
+  }
+  .mode-btn {
+    flex: 1;
+    border: 2px solid var(--border);
+    background: var(--cream-light);
+    color: var(--black);
+    border-radius: 10px;
+    padding: 10px 6px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+  .mode-btn.active {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+  }
+
   .banner {
     background: var(--cream);
     color: var(--red-dark);
@@ -111,13 +143,21 @@
     padding: 2px 8px;
     font-size: 15px;
     font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
   }
+  .tag.tappable:active { opacity: .75; }
+  .tag.has-override { border-color: var(--red); box-shadow: 0 0 0 1px var(--red); }
   .tag.vendor-未指定 { background: #eee; color: #888; }
   .tag.vendor-菜商 { background: #e8f5e9; color: #2e7d32; }
   .tag.vendor-原廠 { background: #e3f2fd; color: #1565c0; }
   .tag.vendor-櫳樺商行 { background: #fff3e0; color: #e65100; }
   .tag.vendor-翊品行 { background: #f3e5f5; color: #6a1b9a; }
   .price { font-weight: 600; color: var(--black); font-size: 15px; }
+  .only-one {
+    font-size: 12px; color: #e65100; font-weight: 700;
+    background: #fff3e0; border-radius: 4px; padding: 1px 6px;
+  }
 
   .qty-ctrl { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
   .qty-btn {
@@ -145,7 +185,6 @@
   .qty-val.zero { color: #bbb; font-weight: 600; }
   .unit-label { font-size: 13px; color: var(--gray); text-align: center; margin-top: 0; }
 
-  /* settings mode extras */
   .settings-row {
     display: none;
     width: 100%;
@@ -225,10 +264,9 @@
     flex-shrink: 0;
   }
 
-  /* modal */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,.5);
+    background: rgba(0,0,0,.72);
     align-items: flex-end; justify-content: center;
   }
   .modal-overlay.open { display: flex; }
@@ -263,6 +301,15 @@
   }
   .grand-total .g-label { font-size: 16px; font-weight: 700; color: var(--red-dark); }
   .grand-total .g-value { font-size: 26px; font-weight: 900; color: var(--red); }
+
+  .settle-mode-wrap {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+  .settle-mode-wrap .mode-label { margin-bottom: 8px; }
 
   .vendor-card {
     background: #fff; border-radius: 12px; margin-bottom: 14px;
@@ -304,6 +351,44 @@
   }
   .empty-hint { text-align: center; padding: 40px 20px; color: var(--gray); font-size: 16px; }
 
+  .picker-overlay {
+    display: none; position: fixed; inset: 0; z-index: 120;
+    background: rgba(0,0,0,.45);
+    align-items: flex-end; justify-content: center;
+  }
+  .picker-overlay.open { display: flex; }
+  .picker {
+    background: #fff;
+    width: 100%; max-width: 520px;
+    border-radius: 18px 18px 0 0;
+    padding: 8px 0 calc(16px + var(--safe-bottom));
+    animation: slideUp .2s ease;
+  }
+  .picker-title {
+    font-size: 18px; font-weight: 800; padding: 14px 18px 8px;
+    color: var(--black);
+  }
+  .picker-sub {
+    font-size: 14px; color: var(--gray); padding: 0 18px 10px;
+  }
+  .picker-opt {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; border: none; background: #fff;
+    padding: 16px 18px; font-size: 18px; font-weight: 700;
+    cursor: pointer; border-top: 1px solid #f0ead0;
+    text-align: left; color: var(--black);
+  }
+  .picker-opt:active { background: var(--cream-light); }
+  .picker-opt.selected { background: #fff8e6; color: var(--red); }
+  .picker-opt .p-price { font-size: 16px; color: var(--gray); font-weight: 600; }
+  .picker-opt.follow { color: var(--red-dark); }
+  .picker-cancel {
+    margin: 10px 14px 0;
+    width: calc(100% - 28px);
+    border: none; background: #f5f5f5; color: var(--gray);
+    border-radius: 12px; padding: 14px; font-size: 17px; font-weight: 700; cursor: pointer;
+  }
+
   .toast {
     position: fixed; left: 50%; bottom: calc(110px + var(--safe-bottom));
     transform: translateX(-50%) translateY(20px);
@@ -317,8 +402,10 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (min-width: 520px) {
-    .modal-overlay { align-items: center; }
+    .modal-overlay, .picker-overlay { align-items: center; }
     .modal { border-radius: 18px; max-height: 85vh; }
+    .picker { border-radius: 18px; }
+    .mode-bar { top: 70px; }
   }
 </style>
 </head>
@@ -334,7 +421,17 @@
       </div>
     </div>
   </header>
-  <div class="banner" id="settingsBanner">設定模式：可改廠商、單價、新增或刪除品項</div>
+
+  <div class="mode-bar" id="modeBar">
+    <div class="mode-label">叫貨模式（點廠商標籤可單獨指定）</div>
+    <div class="mode-switch" id="modeSwitch">
+      <button type="button" class="mode-btn" data-mode="default" onclick="setMode('default')">預設</button>
+      <button type="button" class="mode-btn" data-mode="cheapest" onclick="setMode('cheapest')">最便宜</button>
+      <button type="button" class="mode-btn" data-mode="second" onclick="setMode('second')">次便宜</button>
+    </div>
+  </div>
+
+  <div class="banner hidden" id="settingsBanner">設定模式：可改預設廠商、單價、新增或刪除品項</div>
 
   <div id="listRoot"></div>
 
@@ -361,6 +458,10 @@
     </div>
   </div>
 
+  <div class="picker-overlay" id="pickerOverlay" onclick="pickerBackdrop(event)">
+    <div class="picker" id="pickerSheet" role="dialog" aria-modal="true"></div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
 <script>
@@ -369,69 +470,79 @@
 
   var VENDORS = ['原廠', '櫳樺商行', '翊品行', '菜商', '未指定'];
   var VENDOR_ORDER = ['原廠', '櫳樺商行', '翊品行', '菜商', '未指定'];
+  var PRICE_VENDOR_ORDER = ['原廠', '櫳樺商行', '翊品行'];
   var SECTIONS = ['招牌必點', '小點心', '薯條控', '芋頭控', '熱銷推薦', '新品專區', '串物', '蔬菜類'];
+  var MODE_LABELS = { default: '預設', cheapest: '最便宜', second: '次便宜' };
+
+  function P(yuan, longhua, yipin) {
+    var o = {};
+    if (yuan != null) o['原廠'] = yuan;
+    if (longhua != null) o['櫳樺商行'] = longhua;
+    if (yipin != null) o['翊品行'] = yipin;
+    return o;
+  }
 
   var DEFAULT_ITEMS = [
-    // 招牌必點
-    { id: 's1', section: '招牌必點', name: '香雞排', vendor: '未指定', price: null, unit: '包' },
-    { id: 's2', section: '招牌必點', name: '鹹酥雞', vendor: '未指定', price: null, unit: '包' },
-    { id: 's3', section: '招牌必點', name: '三角骨', vendor: '未指定', price: null, unit: '包' },
-    { id: 's4', section: '招牌必點', name: '香酥一字骨', vendor: '未指定', price: null, unit: '包' },
-    { id: 's5', section: '招牌必點', name: '魷魚', vendor: '翊品行', price: 480, unit: '包' },
-    { id: 's6', section: '招牌必點', name: '雞皮', vendor: '翊品行', price: 380, unit: '包' },
+    // 招牌必點 — 固定原廠（無報價）
+    { id: 's1', section: '招牌必點', name: '香雞排', vendor: '原廠', price: null, unit: '包' },
+    { id: 's2', section: '招牌必點', name: '鹹酥雞', vendor: '原廠', price: null, unit: '包' },
+    { id: 's3', section: '招牌必點', name: '三角骨', vendor: '原廠', price: null, unit: '包' },
+    { id: 's4', section: '招牌必點', name: '香酥一字骨', vendor: '原廠', price: null, unit: '包' },
+    { id: 's5', section: '招牌必點', name: '魷魚', vendor: '原廠', price: null, unit: '包' },
+    { id: 's6', section: '招牌必點', name: '雞皮', vendor: '原廠', price: null, unit: '包' },
     // 小點心
-    { id: 'x1', section: '小點心', name: '炸小湯圓', vendor: '未指定', price: null, unit: '包' },
-    { id: 'x2', section: '小點心', name: '小肉豆', vendor: '原廠', price: 170, unit: '包' },
-    { id: 'x3', section: '小點心', name: '香濃起士棒', vendor: '原廠', price: 520, unit: '包' },
-    { id: 'x4', section: '小點心', name: '銀絲捲', vendor: '原廠', price: 40, unit: '包' },
-    { id: 'x5', section: '小點心', name: '百頁豆腐', vendor: '櫳樺商行', price: 225, unit: '包', note: '素之都' },
-    { id: 'x6', section: '小點心', name: '柳葉魚', vendor: '原廠', price: 680, unit: '箱' },
-    { id: 'x7', section: '小點心', name: '熱狗', vendor: '櫳樺商行', price: 110, unit: '包' },
-    { id: 'x8', section: '小點心', name: '豆包', vendor: '翊品行', price: 320, unit: '包' },
-    { id: 'x9', section: '小點心', name: '米血', vendor: '翊品行', price: 180, unit: '包' },
-    { id: 'x10', section: '小點心', name: '魚板', vendor: '原廠', price: 320, unit: '包' },
-    { id: 'x11', section: '小點心', name: '蘿蔔糕', vendor: '原廠', price: 55, unit: '包' },
+    { id: 'x1', section: '小點心', name: '炸小湯圓', vendor: '原廠', price: null, unit: '包' },
+    { id: 'x2', section: '小點心', name: '小肉豆', vendor: '原廠', price: 170, unit: '包', prices: P(170, 170, 175) },
+    { id: 'x3', section: '小點心', name: '香濃起士棒', vendor: '原廠', price: 520, unit: '包', prices: P(520, null, 530) },
+    { id: 'x4', section: '小點心', name: '銀絲捲', vendor: '原廠', price: 40, unit: '包', prices: P(40, null, 80) },
+    { id: 'x5', section: '小點心', name: '百頁豆腐', vendor: '櫳樺商行', price: 225, unit: '包', note: '素之都', prices: P(230, 225, 230) },
+    { id: 'x6', section: '小點心', name: '柳葉魚', vendor: '原廠', price: 680, unit: '箱', prices: P(680, null, 700) },
+    { id: 'x7', section: '小點心', name: '熱狗', vendor: '櫳樺商行', price: 110, unit: '包', prices: P(120, 110, 115) },
+    { id: 'x8', section: '小點心', name: '豆包', vendor: '翊品行', price: 320, unit: '包', prices: P(330, null, 320) },
+    { id: 'x9', section: '小點心', name: '米血', vendor: '翊品行', price: 180, unit: '包', prices: P(210, null, 180) },
+    { id: 'x10', section: '小點心', name: '魚板', vendor: '原廠', price: 320, unit: '包', prices: P(320, null, 320) },
+    { id: 'x11', section: '小點心', name: '蘿蔔糕', vendor: '原廠', price: 55, unit: '包', prices: P(55, null, 60) },
     // 薯條控
-    { id: 'f1', section: '薯條控', name: '美國脆薯(粗)', vendor: '櫳樺商行', price: 210, unit: '包' },
-    { id: 'f2', section: '薯條控', name: '薯條(細)', vendor: '櫳樺商行', price: 150, unit: '包' },
-    { id: 'f3', section: '薯條控', name: '地瓜薯條', vendor: '原廠', price: 290, unit: '包' },
-    { id: 'f4', section: '薯條控', name: '薯餅', vendor: '翊品行', price: 160, unit: '包' },
+    { id: 'f1', section: '薯條控', name: '美國脆薯(粗)', vendor: '櫳樺商行', price: 210, unit: '包', prices: P(240, 210, 230) },
+    { id: 'f2', section: '薯條控', name: '薯條(細)', vendor: '櫳樺商行', price: 150, unit: '包', prices: P(160, 150, 160) },
+    { id: 'f3', section: '薯條控', name: '地瓜薯條', vendor: '原廠', price: 290, unit: '包', prices: P(290, null, 290) },
+    { id: 'f4', section: '薯條控', name: '薯餅', vendor: '翊品行', price: 160, unit: '包', prices: P(170, null, 160) },
     // 芋頭控
-    { id: 'y1', section: '芋頭控', name: '手工芋籤粿', vendor: '原廠', price: 160, unit: '包' },
-    { id: 'y2', section: '芋頭控', name: '芋條', vendor: '原廠', price: 75, unit: '包' },
-    { id: 'y3', section: '芋頭控', name: '芋餅', vendor: '翊品行', price: 400, unit: '包' },
-    { id: 'y4', section: '芋頭控', name: '蛋黃麻糬芋丸', vendor: '原廠', price: 80, unit: '包' },
+    { id: 'y1', section: '芋頭控', name: '手工芋籤粿', vendor: '原廠', price: 160, unit: '包', prices: P(160, 160, 165) },
+    { id: 'y2', section: '芋頭控', name: '芋條', vendor: '原廠', price: 75, unit: '包', prices: P(75, null, 80) },
+    { id: 'y3', section: '芋頭控', name: '芋餅', vendor: '翊品行', price: 400, unit: '包', prices: P(430, null, 400) },
+    { id: 'y4', section: '芋頭控', name: '蛋黃麻糬芋丸', vendor: '原廠', price: 80, unit: '包', prices: P(80, null, 80) },
     // 熱銷推薦
-    { id: 'h1', section: '熱銷推薦', name: '黃金豆腐', vendor: '未指定', price: null, unit: '包' },
-    { id: 'h2', section: '熱銷推薦', name: '手工黑輪', vendor: '原廠', price: 360, unit: '包' },
-    { id: 'h3', section: '熱銷推薦', name: '台中甜不辣', vendor: '櫳樺商行', price: 235, unit: '包' },
-    { id: 'h4', section: '熱銷推薦', name: '鱈魚板', vendor: '原廠', price: 500, unit: '包' },
-    { id: 'h5', section: '熱銷推薦', name: '蛋餅皮', vendor: '櫳樺商行', price: 65, unit: '包' },
-    { id: 'h6', section: '熱銷推薦', name: '糯米腸', vendor: '原廠', price: 55, unit: '包' },
-    { id: 'h7', section: '熱銷推薦', name: '德國香腸', vendor: '櫳樺商行', price: 260, unit: '包' },
+    { id: 'h1', section: '熱銷推薦', name: '黃金豆腐', vendor: '櫳樺商行', price: null, unit: '包' },
+    { id: 'h2', section: '熱銷推薦', name: '手工黑輪', vendor: '原廠', price: 360, unit: '包', prices: P(360, null, 400) },
+    { id: 'h3', section: '熱銷推薦', name: '台中甜不辣', vendor: '櫳樺商行', price: 235, unit: '包', prices: P(270, 235, 250) },
+    { id: 'h4', section: '熱銷推薦', name: '鱈魚板', vendor: '原廠', price: 500, unit: '包', prices: P(500, null, 535) },
+    { id: 'h5', section: '熱銷推薦', name: '蛋餅皮', vendor: '原廠', price: 75, unit: '包', prices: P(75, 65, 70) },
+    { id: 'h6', section: '熱銷推薦', name: '糯米腸', vendor: '原廠', price: 55, unit: '包', prices: P(55, null, 65) },
+    { id: 'h7', section: '熱銷推薦', name: '德國香腸', vendor: '櫳樺商行', price: 260, unit: '包', prices: P(285, 260, 275) },
     // 新品專區
-    { id: 'n1', section: '新品專區', name: '炸年糕', vendor: '原廠', price: 160, unit: '包' },
-    { id: 'n2', section: '新品專區', name: '旗魚黑輪', vendor: '原廠', price: 500, unit: '包' },
-    { id: 'n3', section: '新品專區', name: '墨魚黑輪', vendor: '原廠', price: 360, unit: '包' },
-    { id: 'n4', section: '新品專區', name: '沙茶黑輪片', vendor: '原廠', price: 360, unit: '包' },
-    { id: 'n5', section: '新品專區', name: '玉米布丁酥', vendor: '翊品行', price: 120, unit: '包' },
-    { id: 'n6', section: '新品專區', name: '檸檬雞柳條', vendor: '櫳樺商行', price: 160, unit: '包' },
-    { id: 'n7', section: '新品專區', name: '干貝酥', vendor: '櫳樺商行', price: 140, unit: '包' },
-    { id: 'n8', section: '新品專區', name: '雪之揚', vendor: '原廠', price: 500, unit: '包' },
-    { id: 'n9', section: '新品專區', name: '魚豆腐', vendor: '原廠', price: 480, unit: '包' },
-    { id: 'n10', section: '新品專區', name: '麻糬燒', vendor: '原廠', price: 530, unit: '包' },
-    { id: 'n11', section: '新品專區', name: '炸蝦捲', vendor: '原廠', price: 560, unit: '包' },
-    { id: 'n12', section: '新品專區', name: '山藥捲', vendor: '原廠', price: 410, unit: '包' },
-    { id: 'n13', section: '新品專區', name: '韓式魚板', vendor: '原廠', price: 550, unit: '包' },
-    { id: 'n14', section: '新品專區', name: '洋蔥圈', vendor: '翊品行', price: 210, unit: '包' },
-    { id: 'n15', section: '新品專區', name: '紅龍雞塊', vendor: '櫳樺商行', price: 150, unit: '包' },
-    { id: 'n16', section: '新品專區', name: '黃金魚蛋', vendor: '翊品行', price: 400, unit: '包' },
+    { id: 'n1', section: '新品專區', name: '炸年糕', vendor: '原廠', price: 160, unit: '包', prices: P(160, null, null) },
+    { id: 'n2', section: '新品專區', name: '旗魚黑輪', vendor: '原廠', price: 500, unit: '包', prices: P(500, null, 560) },
+    { id: 'n3', section: '新品專區', name: '墨魚黑輪', vendor: '原廠', price: 360, unit: '包', prices: P(360, null, null) },
+    { id: 'n4', section: '新品專區', name: '沙茶黑輪片', vendor: '原廠', price: 360, unit: '包', prices: P(360, null, null) },
+    { id: 'n5', section: '新品專區', name: '玉米布丁酥', vendor: '翊品行', price: 120, unit: '包', prices: P(140, null, 120) },
+    { id: 'n6', section: '新品專區', name: '檸檬雞柳條', vendor: '櫳樺商行', price: 160, unit: '包', prices: P(170, 160, 165) },
+    { id: 'n7', section: '新品專區', name: '干貝酥', vendor: '櫳樺商行', price: 140, unit: '包', prices: P(145, 140, 140) },
+    { id: 'n8', section: '新品專區', name: '雪之揚', vendor: '原廠', price: 500, unit: '包', prices: P(500, null, 580) },
+    { id: 'n9', section: '新品專區', name: '魚豆腐', vendor: '原廠', price: 480, unit: '包', prices: P(480, null, 480) },
+    { id: 'n10', section: '新品專區', name: '麻糬燒', vendor: '原廠', price: 530, unit: '包', prices: P(530, null, null) },
+    { id: 'n11', section: '新品專區', name: '炸蝦捲', vendor: '原廠', price: 560, unit: '包', prices: P(560, null, null) },
+    { id: 'n12', section: '新品專區', name: '山藥捲', vendor: '原廠', price: 410, unit: '包', prices: P(410, null, 480) },
+    { id: 'n13', section: '新品專區', name: '韓式魚板', vendor: '櫳樺商行', price: 500, unit: '包', prices: P(550, 500, null) },
+    { id: 'n14', section: '新品專區', name: '洋蔥圈', vendor: '翊品行', price: 210, unit: '包', prices: P(null, null, 210) },
+    { id: 'n15', section: '新品專區', name: '紅龍雞塊', vendor: '櫳樺商行', price: 150, unit: '包', prices: P(160, 150, 150) },
+    { id: 'n16', section: '新品專區', name: '黃金魚蛋', vendor: '翊品行', price: 400, unit: '包', prices: P(null, null, 400) },
     // 串物
-    { id: 'c1', section: '串物', name: '雞心', vendor: '翊品行', price: 600, unit: '包' },
-    { id: 'c2', section: '串物', name: '雞胗', vendor: '翊品行', price: 300, unit: '包' },
-    { id: 'c3', section: '串物', name: '雞屁股', vendor: '翊品行', price: 250, unit: '包' },
-    { id: 'c4', section: '串物', name: '花枝丸', vendor: '原廠', price: 370, unit: '包' },
-    { id: 'c5', section: '串物', name: '貢丸', vendor: '櫳樺商行', price: 380, unit: '包' },
+    { id: 'c1', section: '串物', name: '雞心', vendor: '翊品行', price: 600, unit: '包', prices: P(null, null, 600) },
+    { id: 'c2', section: '串物', name: '雞胗', vendor: '翊品行', price: 300, unit: '包', prices: P(null, null, 300) },
+    { id: 'c3', section: '串物', name: '雞屁股', vendor: '翊品行', price: 250, unit: '包', prices: P(null, null, 250) },
+    { id: 'c4', section: '串物', name: '花枝丸', vendor: '原廠', price: 370, unit: '包', prices: P(370, null, 380) },
+    { id: 'c5', section: '串物', name: '貢丸', vendor: '櫳樺商行', price: 380, unit: '包', prices: P(420, 380, 400) },
     // 蔬菜類
     { id: 'v1', section: '蔬菜類', name: '四季豆', vendor: '菜商', price: null, unit: '包' },
     { id: 'v2', section: '蔬菜類', name: '小黃瓜', vendor: '菜商', price: null, unit: '包' },
@@ -440,24 +551,148 @@
     { id: 'v5', section: '蔬菜類', name: '杏鮑菇', vendor: '菜商', price: null, unit: '斤' }
   ];
 
-  var STORAGE_ITEMS = 'applechicken_items_v1';
+  var STORAGE_ITEMS = 'applechicken_items_v2';
+  var STORAGE_ITEMS_OLD = 'applechicken_items_v1';
   var STORAGE_QTY = 'applechicken_qty_v1';
+  var STORAGE_MODE = 'applechicken_mode_v1';
+  var STORAGE_OVERRIDES = 'applechicken_overrides_v1';
 
   var items = [];
   var qty = {};
+  var mode = 'default'; // default | cheapest | second
+  var overrides = {}; // id -> vendor name
   var settingsOn = false;
+  var pickerItemId = null;
 
   function deepClone(arr) {
     return JSON.parse(JSON.stringify(arr));
   }
 
+  function hasPrices(it) {
+    return it && it.prices && typeof it.prices === 'object' && Object.keys(it.prices).length > 0;
+  }
+
+  function priceEntries(it) {
+    if (!hasPrices(it)) return [];
+    var list = [];
+    PRICE_VENDOR_ORDER.forEach(function (v) {
+      if (it.prices[v] != null && !isNaN(it.prices[v])) {
+        list.push({ vendor: v, price: Number(it.prices[v]) });
+      }
+    });
+    return list;
+  }
+
+  function sortedByPrice(it) {
+    var list = priceEntries(it).slice();
+    list.sort(function (a, b) {
+      if (a.price !== b.price) return a.price - b.price;
+      return PRICE_VENDOR_ORDER.indexOf(a.vendor) - PRICE_VENDOR_ORDER.indexOf(b.vendor);
+    });
+    return list;
+  }
+
+  function resolveVendor(it) {
+    // returns { vendor, price, onlyOne, overridden }
+    if (!it) return { vendor: '未指定', price: null, onlyOne: false, overridden: false };
+
+    if (overrides[it.id]) {
+      var ov = overrides[it.id];
+      var ovPrice = null;
+      if (hasPrices(it) && it.prices[ov] != null) ovPrice = Number(it.prices[ov]);
+      else if (ov === it.vendor) ovPrice = it.price;
+      return { vendor: ov, price: ovPrice, onlyOne: false, overridden: true };
+    }
+
+    if (!hasPrices(it)) {
+      return { vendor: it.vendor || '未指定', price: it.price != null ? it.price : null, onlyOne: false, overridden: false };
+    }
+
+    var ranked = sortedByPrice(it);
+    if (!ranked.length) {
+      return { vendor: it.vendor || '未指定', price: it.price != null ? it.price : null, onlyOne: false, overridden: false };
+    }
+
+    if (mode === 'default') {
+      var defV = it.vendor;
+      var defP = (it.prices[defV] != null) ? Number(it.prices[defV]) : (it.price != null ? it.price : null);
+      return { vendor: defV, price: defP, onlyOne: false, overridden: false };
+    }
+
+    if (mode === 'cheapest') {
+      return { vendor: ranked[0].vendor, price: ranked[0].price, onlyOne: ranked.length === 1, overridden: false };
+    }
+
+    // second
+    if (ranked.length === 1) {
+      return { vendor: ranked[0].vendor, price: ranked[0].price, onlyOne: true, overridden: false };
+    }
+    var lowest = ranked[0].price;
+    var tied = ranked.filter(function (x) { return x.price === lowest; });
+    if (tied.length >= 2) {
+      // second cheapest among ties: the second in tie-break order
+      return { vendor: tied[1].vendor, price: tied[1].price, onlyOne: false, overridden: false };
+    }
+    // unique lowest -> next price tier
+    return { vendor: ranked[1].vendor, price: ranked[1].price, onlyOne: false, overridden: false };
+  }
+
+  function mergeDefaults(saved) {
+    var byId = {};
+    (saved || []).forEach(function (it) { byId[it.id] = it; });
+    var merged = [];
+    DEFAULT_ITEMS.forEach(function (def) {
+      var old = byId[def.id];
+      if (!old) {
+        merged.push(deepClone([def])[0]);
+        return;
+      }
+      var next = {
+        id: def.id,
+        section: def.section,
+        name: def.name,
+        vendor: old.vendor != null ? old.vendor : def.vendor,
+        price: old.price !== undefined ? old.price : def.price,
+        unit: old.unit || def.unit,
+        note: def.note || old.note
+      };
+      // Always refresh prices from defaults (source of truth for multi-vendor)
+      if (def.prices) next.prices = deepClone([def.prices])[0];
+      // Sync display price to default vendor's price when prices exist
+      if (next.prices && next.prices[next.vendor] != null) {
+        next.price = next.prices[next.vendor];
+      } else if (def.price !== undefined && (old.price === undefined || old.price === null) && def.price != null) {
+        next.price = def.price;
+      }
+      // Prefer default vendor if saved vendor is empty
+      if (!next.vendor) next.vendor = def.vendor;
+      merged.push(next);
+      delete byId[def.id];
+    });
+    // keep custom items
+    Object.keys(byId).forEach(function (id) {
+      if (id.indexOf('custom_') === 0 || !DEFAULT_ITEMS.some(function (d) { return d.id === id; })) {
+        merged.push(byId[id]);
+      }
+    });
+    return merged;
+  }
+
   function load() {
     try {
       var savedItems = localStorage.getItem(STORAGE_ITEMS);
-      if (savedItems) {
-        items = JSON.parse(savedItems);
+      if (!savedItems) {
+        // migrate from v1 if present
+        var old = localStorage.getItem(STORAGE_ITEMS_OLD);
+        if (old) {
+          items = mergeDefaults(JSON.parse(old));
+          saveItems();
+        } else {
+          items = deepClone(DEFAULT_ITEMS);
+        }
       } else {
-        items = deepClone(DEFAULT_ITEMS);
+        items = mergeDefaults(JSON.parse(savedItems));
+        saveItems();
       }
     } catch (e) {
       items = deepClone(DEFAULT_ITEMS);
@@ -468,6 +703,20 @@
     } catch (e) {
       qty = {};
     }
+    try {
+      var savedMode = localStorage.getItem(STORAGE_MODE);
+      if (savedMode === 'default' || savedMode === 'cheapest' || savedMode === 'second') mode = savedMode;
+      else mode = 'default';
+    } catch (e) {
+      mode = 'default';
+    }
+    try {
+      var savedOv = localStorage.getItem(STORAGE_OVERRIDES);
+      overrides = savedOv ? JSON.parse(savedOv) : {};
+      if (!overrides || typeof overrides !== 'object') overrides = {};
+    } catch (e) {
+      overrides = {};
+    }
   }
 
   function saveItems() {
@@ -475,6 +724,12 @@
   }
   function saveQty() {
     localStorage.setItem(STORAGE_QTY, JSON.stringify(qty));
+  }
+  function saveMode() {
+    localStorage.setItem(STORAGE_MODE, mode);
+  }
+  function saveOverrides() {
+    localStorage.setItem(STORAGE_OVERRIDES, JSON.stringify(overrides));
   }
 
   function getQty(id) {
@@ -517,7 +772,26 @@
     }).join('');
   }
 
+  function updateModeButtons() {
+    Array.prototype.forEach.call(document.querySelectorAll('.mode-btn'), function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+    });
+  }
+
+  window.setMode = function (m) {
+    if (m !== 'default' && m !== 'cheapest' && m !== 'second') return;
+    mode = m;
+    saveMode();
+    updateModeButtons();
+    render();
+    // if settle open, refresh it
+    if (document.getElementById('settleModal').classList.contains('open')) {
+      openSettle();
+    }
+  };
+
   function render() {
+    updateModeButtons();
     var root = document.getElementById('listRoot');
     var html = '';
     SECTIONS.forEach(function (sec) {
@@ -532,12 +806,20 @@
       list.forEach(function (it) {
         var q = getQty(it.id);
         var has = q > 0;
+        var resolved = resolveVendor(it);
+        var tagClass = 'tag tappable vendor-' + escapeHtml(resolved.vendor) + (resolved.overridden ? ' has-override' : '');
         html += '<div class="item' + (has ? ' has-qty' : '') + '" data-id="' + escapeHtml(it.id) + '">';
         html += '<div class="item-info">';
         html += '<div class="item-name">' + escapeHtml(it.name) + (it.note ? ' <span style="font-size:14px;color:#888;font-weight:500">(' + escapeHtml(it.note) + ')</span>' : '') + '</div>';
         html += '<div class="item-meta">';
-        html += '<span class="tag vendor-' + escapeHtml(it.vendor) + '">' + escapeHtml(it.vendor) + '</span>';
-        html += '<span class="price">' + formatPrice(it.price) + (it.price != null ? '/' + escapeHtml(it.unit || '包') : (it.section === '蔬菜類' ? ' · 時價' : '')) + '</span>';
+        html += '<span class="' + tagClass + '" onclick="openVendorPicker(\'' + it.id + '\')">' + escapeHtml(resolved.vendor) + '</span>';
+        html += '<span class="price">' + formatPrice(resolved.price) + (resolved.price != null ? '/' + escapeHtml(it.unit || '包') : (it.section === '蔬菜類' ? ' · 時價' : '')) + '</span>';
+        if (resolved.onlyOne && mode === 'second' && !resolved.overridden) {
+          html += '<span class="only-one">只有一家</span>';
+        }
+        if (resolved.overridden) {
+          html += '<span class="only-one" style="background:#e3f2fd;color:#1565c0">已指定</span>';
+        }
         html += '</div>';
         html += '<div class="settings-row">';
         html += '<select onchange="updateVendor(\'' + it.id + '\', this.value)">' + vendorOptionsHtml(it.vendor) + '</select>';
@@ -575,7 +857,7 @@
       var q = getQty(it.id);
       if (q > 0) { itemCount++; packCount += q; }
     });
-    document.getElementById('totalCount').textContent = itemCount + ' 項 · ' + packCount + (packCount === 1 ? ' 包' : ' 包');
+    document.getElementById('totalCount').textContent = itemCount + ' 項 · ' + packCount + ' 包';
     document.getElementById('btnSettle').disabled = itemCount === 0;
   }
 
@@ -586,7 +868,6 @@
     if (q === 0) delete qty[id];
     else qty[id] = q;
     saveQty();
-    // lightweight update of this row + bottom
     var row = document.querySelector('.item[data-id="' + id + '"]');
     if (row) {
       row.classList.toggle('has-qty', q > 0);
@@ -597,7 +878,6 @@
       }
       var minus = row.querySelector('.qty-btn.minus');
       if (minus) minus.disabled = q <= 0;
-      // section count badge
       var section = row.closest('.section');
       if (section) {
         var secName = section.getAttribute('data-section');
@@ -632,6 +912,7 @@
     var it = items.find(function (x) { return x.id === id; });
     if (!it) return;
     it.vendor = vendor;
+    if (hasPrices(it) && it.prices[vendor] != null) it.price = it.prices[vendor];
     saveItems();
     render();
   };
@@ -644,6 +925,10 @@
       var n = Number(val);
       it.price = isNaN(n) ? null : n;
     }
+    // also update prices map for current default vendor if present
+    if (hasPrices(it) && it.vendor && it.price != null) {
+      it.prices[it.vendor] = it.price;
+    }
     saveItems();
     render();
   };
@@ -654,8 +939,10 @@
     if (!confirm('確定刪除「' + it.name + '」？')) return;
     items = items.filter(function (x) { return x.id !== id; });
     delete qty[id];
+    delete overrides[id];
     saveItems();
     saveQty();
+    saveOverrides();
     render();
   };
 
@@ -670,7 +957,13 @@
     if (priceVal !== '' && isNaN(price)) price = null;
     var id = 'custom_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     var unit = (section === '蔬菜類' && name.indexOf('杏鮑菇') >= 0) ? '斤' : '包';
-    items.push({ id: id, section: section, name: name, vendor: vendorEl.value, price: price, unit: unit });
+    var vendor = vendorEl.value;
+    var item = { id: id, section: section, name: name, vendor: vendor, price: price, unit: unit };
+    if (price != null && PRICE_VENDOR_ORDER.indexOf(vendor) >= 0) {
+      item.prices = {};
+      item.prices[vendor] = price;
+    }
+    items.push(item);
     saveItems();
     nameEl.value = '';
     priceEl.value = '';
@@ -679,11 +972,15 @@
   };
 
   window.resetDefaults = function () {
-    if (!confirm('確定恢復預設品項與廠商？目前的叫貨數量會一併清除。')) return;
+    if (!confirm('確定恢復預設品項與廠商？叫貨數量與單獨指定也會一併清除。')) return;
     items = deepClone(DEFAULT_ITEMS);
     qty = {};
+    overrides = {};
+    mode = 'default';
     saveItems();
     saveQty();
+    saveOverrides();
+    saveMode();
     toast('已恢復預設');
     render();
   };
@@ -698,15 +995,78 @@
     toast('已清除');
   };
 
+  window.openVendorPicker = function (id) {
+    var it = items.find(function (x) { return x.id === id; });
+    if (!it) return;
+    pickerItemId = id;
+    var sheet = document.getElementById('pickerSheet');
+    var resolved = resolveVendor(it);
+    var html = '';
+    html += '<div class="picker-title">' + escapeHtml(it.name) + '</div>';
+    html += '<div class="picker-sub">選擇這次要跟哪家叫（會蓋過目前模式）</div>';
+
+    var opts = priceEntries(it);
+    if (!opts.length) {
+      // fixed vendor items
+      html += '<button type="button" class="picker-opt selected" onclick="applyOverride(\'' + it.id + '\', \'' + escapeHtml(it.vendor) + '\')">';
+      html += '<span>' + escapeHtml(it.vendor) + '</span>';
+      html += '<span class="p-price">' + (it.section === '蔬菜類' ? '時價' : formatPrice(it.price)) + '</span>';
+      html += '</button>';
+    } else {
+      opts.forEach(function (o) {
+        var selected = (overrides[it.id] ? overrides[it.id] === o.vendor : resolved.vendor === o.vendor && !overrides[it.id]);
+        // mark selected if currently resolved to this (including override)
+        selected = resolved.vendor === o.vendor;
+        html += '<button type="button" class="picker-opt' + (overrides[it.id] === o.vendor ? ' selected' : '') + '" onclick="applyOverride(\'' + it.id + '\', \'' + escapeHtml(o.vendor) + '\')">';
+        html += '<span>' + escapeHtml(o.vendor) + (selected && !overrides[it.id] ? ' · 目前模式' : '') + '</span>';
+        html += '<span class="p-price">$' + o.price + '</span>';
+        html += '</button>';
+      });
+    }
+
+    html += '<button type="button" class="picker-opt follow" onclick="clearOverride(\'' + it.id + '\')">跟隨模式（' + escapeHtml(MODE_LABELS[mode]) + '）</button>';
+    html += '<button type="button" class="picker-cancel" onclick="closePicker()">取消</button>';
+    sheet.innerHTML = html;
+    document.getElementById('pickerOverlay').classList.add('open');
+  };
+
+  window.applyOverride = function (id, vendor) {
+    overrides[id] = vendor;
+    saveOverrides();
+    closePicker();
+    render();
+    if (document.getElementById('settleModal').classList.contains('open')) openSettle();
+    toast('已指定「' + vendor + '」');
+  };
+
+  window.clearOverride = function (id) {
+    delete overrides[id];
+    saveOverrides();
+    closePicker();
+    render();
+    if (document.getElementById('settleModal').classList.contains('open')) openSettle();
+    toast('已改為跟隨模式');
+  };
+
+  window.closePicker = function () {
+    document.getElementById('pickerOverlay').classList.remove('open');
+    pickerItemId = null;
+  };
+
+  window.pickerBackdrop = function (e) {
+    if (e.target === document.getElementById('pickerOverlay')) closePicker();
+  };
+
   function buildGroups() {
     var groups = {};
     VENDOR_ORDER.forEach(function (v) { groups[v] = []; });
     items.forEach(function (it) {
       var q = getQty(it.id);
       if (q <= 0) return;
-      var v = it.vendor || '未指定';
+      var r = resolveVendor(it);
+      var v = r.vendor || '未指定';
       if (!groups[v]) groups[v] = [];
-      groups[v].push({ item: it, qty: q });
+      groups[v].push({ item: it, qty: q, price: r.price, onlyOne: r.onlyOne, overridden: r.overridden });
     });
     return groups;
   }
@@ -727,6 +1087,14 @@
     var grand = 0;
     var any = false;
 
+    html += '<div class="settle-mode-wrap">';
+    html += '<div class="mode-label">叫貨模式</div>';
+    html += '<div class="mode-switch">';
+    html += '<button type="button" class="mode-btn' + (mode === 'default' ? ' active' : '') + '" data-mode="default" onclick="setMode(\'default\')">預設</button>';
+    html += '<button type="button" class="mode-btn' + (mode === 'cheapest' ? ' active' : '') + '" data-mode="cheapest" onclick="setMode(\'cheapest\')">最便宜</button>';
+    html += '<button type="button" class="mode-btn' + (mode === 'second' ? ' active' : '') + '" data-mode="second" onclick="setMode(\'second\')">次便宜</button>';
+    html += '</div></div>';
+
     VENDOR_ORDER.forEach(function (vendor) {
       var lines = groups[vendor] || [];
       if (!lines.length) return;
@@ -734,8 +1102,8 @@
       var sub = 0;
       var hasPriced = false;
       lines.forEach(function (line) {
-        if (line.item.price != null && !isNaN(line.item.price)) {
-          sub += line.item.price * line.qty;
+        if (line.price != null && !isNaN(line.price)) {
+          sub += line.price * line.qty;
           hasPriced = true;
         }
       });
@@ -749,11 +1117,14 @@
       }
       lines.forEach(function (line) {
         var unit = line.item.unit || '包';
-        var lineSub = (line.item.price != null && !isNaN(line.item.price)) ? ('$' + (line.item.price * line.qty)) : '—';
+        var lineSub = (line.price != null && !isNaN(line.price)) ? ('$' + (line.price * line.qty)) : '—';
+        var extra = '';
+        if (line.onlyOne && mode === 'second' && !line.overridden) extra = ' <span class="only-one">只有一家</span>';
+        if (line.overridden) extra = ' <span class="only-one" style="background:#e3f2fd;color:#1565c0">已指定</span>';
         html += '<div class="vendor-line">';
-        html += '<span class="l-name">' + escapeHtml(line.item.name) + '</span>';
+        html += '<span class="l-name">' + escapeHtml(line.item.name) + extra + '</span>';
         html += '<span class="l-qty">x' + line.qty + (unit !== '包' ? unit : '') + '</span>';
-        html += '<span class="l-price">' + formatPrice(line.item.price) + '</span>';
+        html += '<span class="l-price">' + formatPrice(line.price) + '</span>';
         html += '<span class="l-sub">' + lineSub + '</span>';
         html += '</div>';
       });
@@ -762,14 +1133,16 @@
     });
 
     if (!any) {
-      html = '<div class="empty-hint">尚未選取任何品項</div>';
+      html += '<div class="empty-hint">尚未選取任何品項</div>';
     } else {
-      html = '<div class="grand-total"><span class="g-label">預估合計（有標價者）</span><span class="g-value">$' + grand + '</span></div>' + html;
+      html = html.replace(
+        '<div class="settle-mode-wrap">',
+        '<div class="grand-total"><span class="g-label">預估合計（有標價者）· ' + escapeHtml(MODE_LABELS[mode]) + '</span><span class="g-value">$' + grand + '</span></div><div class="settle-mode-wrap">'
+      );
     }
 
     body.innerHTML = html;
 
-    // bind copy buttons
     Array.prototype.forEach.call(body.querySelectorAll('.btn-copy'), function (btn) {
       btn.addEventListener('click', function () {
         var vendor = btn.getAttribute('data-vendor');
@@ -820,31 +1193,30 @@
     if (e.target === document.getElementById('settleModal')) closeSettle();
   };
 
-  // Demo mode via hash: #demo pre-fills some quantities and opens settlement
+  // Demo: #demo prefills 花枝丸/熱狗/小肉豆/韓式魚板/豆包, sets 次便宜, opens settle
+  // #demo-list sets 最便宜 and stays on list
   function applyDemo() {
-    if (location.hash !== '#demo') return;
+    var hash = location.hash || '';
+    if (hash !== '#demo' && hash !== '#demo-list' && hash !== '#demo-settle') return;
     qty = {
-      s5: 1, // 魷魚
-      x2: 2, // 小肉豆
-      x7: 3, // 熱狗
-      x8: 1, // 豆包
-      f1: 2, // 美國脆薯
-      f2: 1, // 薯條細
-      h3: 2, // 台中甜不辣
-      h7: 2, // 德國香腸
-      n5: 1, // 玉米布丁酥
-      n15: 2, // 紅龍雞塊
-      c4: 1, // 花枝丸
-      c5: 1, // 貢丸
-      v1: 1, // 四季豆
-      v5: 2, // 杏鮑菇 斤
-      s1: 1  // 香雞排 未指定
+      c4: 2,  // 花枝丸
+      x7: 3,  // 熱狗
+      x2: 2,  // 小肉豆
+      n13: 1, // 韓式魚板
+      x8: 2   // 豆包
     };
+    overrides = {};
+    if (hash === '#demo-list') {
+      mode = 'cheapest';
+    } else {
+      mode = 'second';
+    }
     saveQty();
+    saveMode();
+    saveOverrides();
   }
 
   // init
-  document.getElementById('settingsBanner').classList.add('hidden');
   load();
   applyDemo();
   render();
@@ -853,8 +1225,18 @@
     openSettle();
   }
 
-  // Expose for debugging / tests
-  window.__AC = { items: function () { return items; }, qty: function () { return qty; }, render: render };
+  window.__AC = {
+    items: function () { return items; },
+    qty: function () { return qty; },
+    mode: function () { return mode; },
+    overrides: function () { return overrides; },
+    resolve: function (id) {
+      var it = items.find(function (x) { return x.id === id; });
+      return resolveVendor(it);
+    },
+    setMode: window.setMode,
+    render: render
+  };
 })();
 </script>
 </body>
