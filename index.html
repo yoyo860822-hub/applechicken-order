@@ -425,7 +425,6 @@
   <div class="mode-bar" id="modeBar">
     <div class="mode-label">叫貨模式（點廠商標籤可單獨指定）</div>
     <div class="mode-switch" id="modeSwitch">
-      <button type="button" class="mode-btn" data-mode="default" onclick="setMode('default')">預設</button>
       <button type="button" class="mode-btn" data-mode="cheapest" onclick="setMode('cheapest')">最便宜</button>
       <button type="button" class="mode-btn" data-mode="second" onclick="setMode('second')">次便宜</button>
     </div>
@@ -472,7 +471,7 @@
   var VENDOR_ORDER = ['原廠', '櫳樺商行', '翊品行', '菜商', '未指定'];
   var PRICE_VENDOR_ORDER = ['原廠', '櫳樺商行', '翊品行'];
   var SECTIONS = ['招牌必點', '小點心', '薯條控', '芋頭控', '熱銷推薦', '新品專區', '串物', '蔬菜類'];
-  var MODE_LABELS = { default: '預設', cheapest: '最便宜', second: '次便宜' };
+  var MODE_LABELS = { cheapest: '最便宜', second: '次便宜' };
 
   function P(yuan, longhua, yipin) {
     var o = {};
@@ -513,7 +512,7 @@
     { id: 'y3', section: '芋頭控', name: '芋餅', vendor: '翊品行', price: 400, unit: '包', prices: P(430, null, 400) },
     { id: 'y4', section: '芋頭控', name: '蛋黃麻糬芋丸', vendor: '原廠', price: 80, unit: '包', prices: P(80, null, 80) },
     // 熱銷推薦
-    { id: 'h1', section: '熱銷推薦', name: '黃金豆腐', vendor: '櫳樺商行', price: null, unit: '包' },
+    { id: 'h1', section: '熱銷推薦', name: '黃金豆腐', vendor: '櫳樺商行', price: 30, unit: '包', prices: P(null, 30, null) },
     { id: 'h2', section: '熱銷推薦', name: '手工黑輪', vendor: '原廠', price: 360, unit: '包', prices: P(360, null, 400) },
     { id: 'h3', section: '熱銷推薦', name: '台中甜不辣', vendor: '櫳樺商行', price: 235, unit: '包', prices: P(270, 235, 250) },
     { id: 'h4', section: '熱銷推薦', name: '鱈魚板', vendor: '原廠', price: 500, unit: '包', prices: P(500, null, 535) },
@@ -534,13 +533,13 @@
     { id: 'n11', section: '新品專區', name: '炸蝦捲', vendor: '原廠', price: 560, unit: '包', prices: P(560, null, null) },
     { id: 'n12', section: '新品專區', name: '山藥捲', vendor: '原廠', price: 410, unit: '包', prices: P(410, null, 480) },
     { id: 'n13', section: '新品專區', name: '韓式魚板', vendor: '櫳樺商行', price: 500, unit: '包', prices: P(550, 500, null) },
-    { id: 'n14', section: '新品專區', name: '洋蔥圈', vendor: '翊品行', price: 210, unit: '包', prices: P(null, null, 210) },
+    { id: 'n14', section: '新品專區', name: '洋蔥圈', vendor: '櫳樺商行', price: 205, unit: '包', prices: P(null, 205, 210) },
     { id: 'n15', section: '新品專區', name: '紅龍雞塊', vendor: '櫳樺商行', price: 150, unit: '包', prices: P(160, 150, 150) },
     { id: 'n16', section: '新品專區', name: '黃金魚蛋', vendor: '翊品行', price: 400, unit: '包', prices: P(null, null, 400) },
     // 串物
-    { id: 'c1', section: '串物', name: '雞心', vendor: '翊品行', price: 600, unit: '包', prices: P(null, null, 600) },
-    { id: 'c2', section: '串物', name: '雞胗', vendor: '翊品行', price: 300, unit: '包', prices: P(null, null, 300) },
-    { id: 'c3', section: '串物', name: '雞屁股', vendor: '翊品行', price: 250, unit: '包', prices: P(null, null, 250) },
+    { id: 'c1', section: '串物', name: '雞心', vendor: '原廠', price: null, unit: '包' },
+    { id: 'c2', section: '串物', name: '雞胗', vendor: '原廠', price: null, unit: '包' },
+    { id: 'c3', section: '串物', name: '雞屁股', vendor: '原廠', price: null, unit: '包' },
     { id: 'c4', section: '串物', name: '花枝丸', vendor: '原廠', price: 370, unit: '包', prices: P(370, null, 380) },
     { id: 'c5', section: '串物', name: '貢丸', vendor: '櫳樺商行', price: 380, unit: '包', prices: P(420, 380, 400) },
     // 蔬菜類
@@ -551,15 +550,15 @@
     { id: 'v5', section: '蔬菜類', name: '杏鮑菇', vendor: '菜商', price: null, unit: '斤' }
   ];
 
-  var STORAGE_ITEMS = 'applechicken_items_v2';
-  var STORAGE_ITEMS_OLD = 'applechicken_items_v1';
+  var STORAGE_ITEMS = 'applechicken_items_v3';
+  var STORAGE_ITEMS_OLD = 'applechicken_items_v2';
   var STORAGE_QTY = 'applechicken_qty_v1';
   var STORAGE_MODE = 'applechicken_mode_v1';
-  var STORAGE_OVERRIDES = 'applechicken_overrides_v1';
+  var STORAGE_OVERRIDES = 'applechicken_overrides_v2';
 
   var items = [];
   var qty = {};
-  var mode = 'default'; // default | cheapest | second
+  var mode = 'cheapest'; // cheapest | second
   var overrides = {}; // id -> vendor name
   var settingsOn = false;
   var pickerItemId = null;
@@ -613,13 +612,7 @@
       return { vendor: it.vendor || '未指定', price: it.price != null ? it.price : null, onlyOne: false, overridden: false };
     }
 
-    if (mode === 'default') {
-      var defV = it.vendor;
-      var defP = (it.prices[defV] != null) ? Number(it.prices[defV]) : (it.price != null ? it.price : null);
-      return { vendor: defV, price: defP, onlyOne: false, overridden: false };
-    }
-
-    if (mode === 'cheapest') {
+    if (mode !== 'second') {
       return { vendor: ranked[0].vendor, price: ranked[0].price, onlyOne: ranked.length === 1, overridden: false };
     }
 
@@ -651,21 +644,18 @@
         id: def.id,
         section: def.section,
         name: def.name,
-        vendor: old.vendor != null ? old.vendor : def.vendor,
-        price: old.price !== undefined ? old.price : def.price,
+        vendor: def.vendor,
+        price: def.price != null ? def.price : null,
         unit: old.unit || def.unit,
         note: def.note || old.note
       };
       // Always refresh prices from defaults (source of truth for multi-vendor)
       if (def.prices) next.prices = deepClone([def.prices])[0];
-      // Sync display price to default vendor's price when prices exist
+      else delete next.prices; // ensure removed prices stay removed
+      // Keep custom unit tweaks only; vendor/price always from latest defaults
       if (next.prices && next.prices[next.vendor] != null) {
         next.price = next.prices[next.vendor];
-      } else if (def.price !== undefined && (old.price === undefined || old.price === null) && def.price != null) {
-        next.price = def.price;
       }
-      // Prefer default vendor if saved vendor is empty
-      if (!next.vendor) next.vendor = def.vendor;
       merged.push(next);
       delete byId[def.id];
     });
@@ -682,8 +672,7 @@
     try {
       var savedItems = localStorage.getItem(STORAGE_ITEMS);
       if (!savedItems) {
-        // migrate from v1 if present
-        var old = localStorage.getItem(STORAGE_ITEMS_OLD);
+        var old = localStorage.getItem(STORAGE_ITEMS_OLD) || localStorage.getItem('applechicken_items_v1');
         if (old) {
           items = mergeDefaults(JSON.parse(old));
           saveItems();
@@ -705,18 +694,31 @@
     }
     try {
       var savedMode = localStorage.getItem(STORAGE_MODE);
-      if (savedMode === 'default' || savedMode === 'cheapest' || savedMode === 'second') mode = savedMode;
-      else mode = 'default';
+      if (savedMode === 'cheapest' || savedMode === 'second') mode = savedMode;
+      else mode = 'cheapest'; // also maps old 'default'/'預設' to 最便宜
     } catch (e) {
       mode = 'default';
     }
     try {
-      var savedOv = localStorage.getItem(STORAGE_OVERRIDES);
+      var savedOv = localStorage.getItem(STORAGE_OVERRIDES) || localStorage.getItem('applechicken_overrides_v1');
       overrides = savedOv ? JSON.parse(savedOv) : {};
       if (!overrides || typeof overrides !== 'object') overrides = {};
     } catch (e) {
       overrides = {};
     }
+    // Drop overrides pointing at vendors the item no longer carries / invalid
+    var ovChanged = false;
+    Object.keys(overrides).forEach(function (id) {
+      var it = items.find(function (x) { return x.id === id; });
+      var v = overrides[id];
+      if (!it || !v) { delete overrides[id]; ovChanged = true; return; }
+      if (hasPrices(it)) {
+        if (it.prices[v] == null) { delete overrides[id]; ovChanged = true; }
+      } else if (v !== it.vendor) {
+        delete overrides[id]; ovChanged = true;
+      }
+    });
+    if (ovChanged) saveOverrides();
   }
 
   function saveItems() {
@@ -779,7 +781,7 @@
   }
 
   window.setMode = function (m) {
-    if (m !== 'default' && m !== 'cheapest' && m !== 'second') return;
+    if (m !== 'cheapest' && m !== 'second') return;
     mode = m;
     saveMode();
     updateModeButtons();
@@ -976,7 +978,7 @@
     items = deepClone(DEFAULT_ITEMS);
     qty = {};
     overrides = {};
-    mode = 'default';
+    mode = 'cheapest';
     saveItems();
     saveQty();
     saveOverrides();
@@ -1090,7 +1092,6 @@
     html += '<div class="settle-mode-wrap">';
     html += '<div class="mode-label">叫貨模式</div>';
     html += '<div class="mode-switch">';
-    html += '<button type="button" class="mode-btn' + (mode === 'default' ? ' active' : '') + '" data-mode="default" onclick="setMode(\'default\')">預設</button>';
     html += '<button type="button" class="mode-btn' + (mode === 'cheapest' ? ' active' : '') + '" data-mode="cheapest" onclick="setMode(\'cheapest\')">最便宜</button>';
     html += '<button type="button" class="mode-btn' + (mode === 'second' ? ' active' : '') + '" data-mode="second" onclick="setMode(\'second\')">次便宜</button>';
     html += '</div></div>';
